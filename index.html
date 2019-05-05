@@ -9,7 +9,6 @@
     25-50: schlecht
     0-25: sehr schlecht
 -->
-//TODO: Rechtschreibfehler: verschmutzt
 <html>
 
 <head>
@@ -329,17 +328,15 @@
                 return 3
             }
         }
-//FIXME: Leitfähigkeit
         function getIndexOfConductivity(inputInt) {
             if (inputInt <= 300) {
-                inputInt = Math.round(inputInt * 25) / 25
+                inputInt = Math.round(inputInt / 25) * 25
             } else if (inputInt <= 600) {
-                inputInt = Math.round(inputInt * 50) / 50
+                inputInt = Math.round(inputInt / 50) * 50
             } else if (inputInt <= 1500) {
-                inputInt = Math.round(inputInt * 100) / 100
+                inputInt = Math.round(inputInt / 100) * 100
             } else
-                inputInt = Math.round(inputInt * 1000) / 1000
-
+                inputInt = Math.round(inputInt / 1000) * 1000
 
             LocalDictionary = {
                 0: 72,
@@ -396,7 +393,7 @@
             } else if (resultIn <= 27 && resultIn >= 17) {
                 return "sehr stark verschmutzt"
             } else {
-                return "übermäßig vermschmutzt"
+                return "übermäßig verschmutzt"
             }
         }
 
