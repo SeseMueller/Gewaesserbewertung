@@ -1,0 +1,700 @@
+<!--
+    -Ermittlung des Gütepotentialwertes
+    -Potenzierung vom Gpw. mit dem Wichtungsfaktor
+    -Multiplikation aller Einzelprodukte
+
+    90-100: excellent
+    70-90: gut
+    50-70: mittel
+    25-50: schlecht
+    0-25: sehr schlecht
+-->
+
+<html>
+
+<head>
+    <!--source: (https://pixabay.com/de/photos/fluss-h%C3%BCgel-abend-california-1590010/) -->
+    <style>
+        body {
+            background-image: url("river-1590010_1920-min.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-color: black;
+            font-family: Arial, Helvetica, sans-serif;
+            color: white;
+        }
+
+        p {
+            margin: 3px;
+        }
+
+        button.submit {
+            height: 30px;
+            width: 300px;
+        }
+
+        .upper {
+            height: fit-content;
+            width: 100%;
+        }
+
+        .ueberschrift {
+            font-size: 300%;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .unterueberschrift {
+            text-align: center;
+        }
+
+        .main-body {
+            height: auto;
+            max-width: 100%;
+            align-self: auto;
+        }
+
+        .result-body {
+            width: 100%;
+        }
+
+        h1.result-head {
+            text-align: center;
+        }
+        input{
+            border-width: 2px;
+            border-color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <!--script tag für alle Funktionen-->
+    <script>
+        function getIndexOfTemperature(inputInt) {
+            inputInt = Math.round(inputInt)
+            LocalDictionary = {
+                14: 100,
+                15: 99,
+                16: 97.5,
+                17: 95,
+                18: 90,
+                19: 79,
+                20: 67.5,
+                21: 56,
+                22: 45,
+                23: 33.5,
+                24: 22,
+                25: 15,
+                26: 9,
+                27: 5.5,
+                28: 3,
+                29: 1.5,
+                30: 1
+            }
+            if (13 < inputInt && inputInt < 31) {
+                return LocalDictionary[inputInt]
+            } else if (inputInt < 14) {
+                return 100
+            } else return 1
+        }
+
+        function getIndexOfOxygen(inputInt) {
+            inputInt = Math.round(inputInt / 5) * 5
+            LocalDictionary = {
+                0: 2,
+                5: 2.5,
+                10: 3,
+                15: 4.5,
+                20: 6,
+                25: 9,
+                30: 12,
+                35: 15,
+                40: 19,
+                45: 24,
+                50: 30,
+                55: 36,
+                60: 43,
+                65: 53,
+                70: 63,
+                75: 71,
+                80: 79,
+                85: 86,
+                90: 93,
+                95: 99,
+                100: 100,
+                105: 100,
+                110: 97,
+                115: 95,
+                120: 90.5,
+                125: 87,
+                130: 83
+            }
+            if (inputInt <= 130) {
+                return LocalDictionary[inputInt]
+            } else return 83
+        }
+        //biochemischer sauerstoffbedarf
+        function getIndexOfNeededOxygen(inputInt) {
+            inputInt = Math.round(inputInt * 2) / 2
+            LocalDictionary = {
+                0: 100,
+                0.5: 99.5,
+                1: 98,
+                1.5: 95,
+                2: 90,
+                2.5: 84,
+                3: 76,
+                3.5: 68,
+                4: 61,
+                4.5: 54,
+                5: 48,
+                5.5: 42,
+                6: 37,
+                6.5: 32.5,
+                7: 28,
+                7.5: 22.5,
+                8: 20.5,
+                8.5: 17.5,
+                9: 14.5,
+                9.5: 12,
+                10: 10,
+                10.5: 9,
+                11: 8,
+                11.5: 7,
+                12: 6,
+                12.5: 5.5,
+                13: 5,
+                13.5: 4.5,
+                14: 4.5,
+                14.5: 4,
+                15: 4,
+            }
+            if (inputInt > 15) {
+                return 3
+            } else return LocalDictionary[inputInt]
+        }
+
+        function getIndexOfPh(inputInt) {
+            if (!(inputInt < 6.5 || inputInt > 7.9)) {
+                inputInt = Math.round(inputInt * 10) / 10
+            } else {
+                inputInt = Math.round(inputInt * 2) / 2
+            }
+            LocalDictionary = {
+                3: 1,
+                3.5: 2.5,
+                4: 7,
+                4.5: 13,
+                5: 22,
+                5.5: 34.5,
+                6: 56.5,
+                6.5: 78.5,
+                6.6: 83,
+                6.7: 87.5,
+                6.8: 92,
+                6.9: 96,
+                7: 98.5,
+                7.1: 99.5,
+                7.2: 100,
+                7.3: 100,
+                7.4: 99.5,
+                7.5: 98.5,
+                7.6: 96,
+                7.7: 92,
+                7.8: 87.5,
+                7.9: 83.5,
+                8: 78.5,
+                8.5: 55.5,
+                9: 33,
+                9.5: 18,
+                10: 10.5
+            }
+            if (inputInt < 3) {
+                return 1
+            } else if (inputInt > 10) {
+                return 1
+            } else
+                return LocalDictionary[inputInt]
+        }
+
+        function getIndexOfNitrate(inputInt) {
+            inputInt = Math.round(inputInt * 0.5) / 0.5
+            LocalDictionary = {
+                0: 100,
+                2: 94,
+                4: 82,
+                6: 76,
+                8: 76,
+                10: 70.5,
+                12: 64.5,
+                14: 58.5,
+                16: 52.5,
+                18: 46.5,
+                20: 40.5,
+                22: 35.5,
+                24: 30,
+                26: 26,
+                28: 23,
+                30: 20,
+                32: 18.5,
+                34: 17,
+                36: 15,
+                38: 12.5,
+                40: 10,
+            }
+            if (inputInt <= 40) {
+                return LocalDictionary[inputInt]
+            } else {
+                return 10
+            }
+        }
+
+        function getIndexOfPhosphate(inputInt) {
+            if (inputInt < 1.8) {
+                inputInt = Math.round(inputInt * 10) / 10
+            } else if (inputInt = 1.8) {} else {
+                inputInt = Math.round(inputInt * 2) / 2
+            }
+            LocalDictionary = {
+                0: 100,
+                0.1: 95,
+                0.2: 84,
+                0.3: 72,
+                0.4: 60,
+                0.5: 48,
+                0.6: 39,
+                0.7: 31.5,
+                0.8: 25,
+                0.9: 20,
+                1: 16,
+                1.1: 12.5,
+                1.2: 10,
+                1.3: 8,
+                1.4: 7,
+                1.5: 6,
+                1.6: 5.5,
+                1.8: 5,
+                2: 5,
+                2.5: 4,
+                3: 3,
+                3.5: 2.5,
+                4: 2,
+                4.5: 1.5,
+                5: 1,
+            }
+            if (inputInt <= 5) {
+                return LocalDictionary[inputInt]
+            } else {
+                return 1
+            }
+        }
+
+        function getIndexOfAmmonium(inputInt) {
+            if (inputInt <= 2) {
+                inputInt = Math.round(inputInt * 5) / 5
+            } else if (inputInt <= 3) {
+                inputInt = Math.round(inputInt * 2) / 2
+            } else {
+                inputInt = Math.round(inputInt)
+            }
+            LocalDictionary = {
+                0: 100,
+                0.2: 84,
+                0.4: 60,
+                0.6: 49,
+                0.8: 40,
+                1: 35,
+                1.2: 31,
+                1.4: 28.5,
+                1.6: 26.5,
+                1.8: 24.5,
+                2: 23,
+                2.5: 20,
+                3: 18,
+                4: 15.5,
+                5: 12,
+                6: 10,
+                7: 8,
+                8: 6.5,
+                9: 5.5,
+                10: 4.5,
+                11: 4,
+                12: 3.5,
+                13: 3.5
+            }
+            if (inputInt <= 13) {
+                return LocalDictionary[inputInt]
+            } else {
+                return 3
+            }
+        }
+
+        function getIndexOfConductivity(inputInt) {
+            if (inputInt <= 300) {
+                inputInt = Math.round(inputInt * 25) / 25
+            } else if (inputInt <= 600) {
+                inputInt = Math.round(inputInt * 50) / 50
+            } else if (inputInt <= 1500) {
+                inputInt = Math.round(inputInt * 100) / 100
+            } else
+                inputInt = Math.round(inputInt * 1000) / 1000
+
+
+            LocalDictionary = {
+                0: 72,
+                25: 85,
+                50: 91,
+                75: 95,
+                100: 97.5,
+                125: 99.5,
+                150: 100,
+                175: 99.5,
+                200: 98.5,
+                225: 97,
+                250: 95.5,
+                275: 93,
+                300: 91,
+                350: 85,
+                400: 77,
+                450: 70,
+                500: 63,
+                550: 56,
+                600: 50,
+                700: 39,
+                800: 31,
+                900: 24,
+                1000: 19,
+                1100: 15,
+                1200: 13,
+                1300: 11,
+                1400: 10,
+                1500: 9,
+                2000: 8,
+                3000: 6,
+                4000: 4,
+                5000: 2,
+            }
+            if (inputInt <= 5000) {
+                return LocalDictionary[inputInt]
+            } else {
+                return 2
+            }
+        }
+
+        function getNameFromPoints(resultIn) {
+            if (resultIn <= 100 && resultIn >= 83) {
+                return "unbelastet,bzw. wenig verschmutzt"
+            } else if (resultIn <= 83 && resultIn >= 73) {
+                return "gering belastet"
+            } else if (resultIn <= 73 && resultIn >= 56) {
+                return "mäßig belastet"
+            } else if (resultIn <= 56 && resultIn >= 44) {
+                return "kritisch belastet"
+            } else if (resultIn <= 44 && resultIn >= 27) {
+                return "stark verschmutzt"
+            } else if (resultIn <= 27 && resultIn >= 17) {
+                return "sehr stark verschmutzt"
+            } else {
+                return "übermäßig vermschmutzt"
+            }
+        }
+
+        function CalculateScore() {
+            returnable = true;
+            Values = {
+                Temperature: null,
+                Oxygen: null,
+                NeededOxygen: null,
+                Ph: null,
+                Nitrate: null,
+                Phosphate: null,
+                Ammonium: null,
+                Conductivity: null
+            }
+            Validity = {
+                Temperature: true,
+                Oxygen: true,
+                NeededOxygen: true,
+                Ph: true,
+                Nitrate: true,
+                Phosphate: true,
+                Ammonium: true,
+                Conductivity: true
+            }
+            TemperatureIn = document.getElementById("TemperaturIn").value
+            if (isValid(TemperatureIn, "Temperatur")) {
+                if (TemperatureIn == "") {
+                    Values.Temperature = "21"
+                    setWarning("Temperatur")
+                } else {
+                    Values.Temperature = TemperatureIn
+                }
+            } else {
+                returnable = false;
+                Validity.Temperature = false;
+            }
+
+
+            OxygenIn = document.getElementById("SauerstoffIn").value
+            if (isValid(OxygenIn, "Oxygen")) {
+                if (OxygenIn == "") {
+                    Values.Oxygen = "65"
+                    setWarning("Sauerstoff")
+                } else {
+                    Values.Oxygen = OxygenIn;
+                }
+
+            } else {
+                returnable = false;
+                Validity.Oxygen = false
+            }
+
+
+            NeededOxygenIn = document.getElementById("SauerstoffbedarfIn").value
+            if (isValid(NeededOxygenIn, "NeededOxygen")) {
+                if (NeededOxygenIn == "") {
+                    Values.NeededOxygen = "5"
+                    setWarning("Sauerstoffbedarf")
+                } else {
+                    Values.NeededOxygen = NeededOxygenIn
+                }
+            } else {
+                returnable = false;
+                Validity.NeededOxygen = false
+            }
+
+
+            PhIn = document.getElementById("PhIn").value
+            if (isValid(PhIn, "Ph")) {
+                if (PhIn == "") {
+                    Values.Ph = "6"
+                    setWarning("Ph")
+                } else {
+                    Values.Ph = PhIn
+                }
+            } else {
+                returnable = false;
+                Validity.Ph = false
+            }
+
+
+            NitrateIn = document.getElementById("NitratIn").value
+            if (isValid(NitrateIn, "Nitrate")) {
+                if (NitrateIn == "") {
+                    Values.Nitrate = "16"
+                    setWarning("Nitrat")
+                } else {
+                    Values.Nitrate = NitrateIn
+                }
+            } else {
+                returnable = false;
+                Validity.Nitrate = false
+            }
+
+
+            PhosphateIn = document.getElementById("PhosphatIn").value
+            if (isValid(PhosphateIn, "Phosphate")) {
+                if (PhosphateIn == "") {
+                    Values.Phosphate = "0.5"
+                    setWarning("Phosphat")
+                } else {
+                    Values.Phosphate = PhosphateIn
+                }
+            } else {
+                returnable = false;
+                Validity.Phosphate = false
+            }
+
+
+            AmmoniumIn = document.getElementById("AmmoniumIn").value
+            if (isValid(AmmoniumIn, "Ammonium")) {
+                if (AmmoniumIn == "") {
+                    Values.Ammonium = "0.6"
+                    setWarning("Ammonium")
+                } else {
+                    Values.Ammonium = AmmoniumIn
+                }
+            } else {
+                returnable = false;
+                Validity.Ammonium = false
+            }
+
+
+            ConductivityIn = document.getElementById("LeitfähigkeitIn").value
+            if (isValid(ConductivityIn, "Conductivity")) {
+                if (ConductivityIn == "") {
+                    Values.Conductivity = "600"
+                    setWarning("Leitfähigkeit")
+                } else {
+                    Values.Conductivity = ConductivityIn
+                }
+            } else {
+                returnable = false;
+                Validity.Conductivity = false
+            }
+
+
+
+            if (returnable) {
+                Values.Temperature = (Values.Temperature).replace(",", ".")
+                Values.Oxygen = (Values.Oxygen).replace(",", ".")
+                Values.NeededOxygen = (Values.NeededOxygen).replace(",", ".")
+                Values.Ph = (Values.Ph).replace(",", ".")
+                Values.Nitrate = (Values.Nitrate).replace(",", ".")
+                Values.Phosphate = (Values.Phosphate).replace(",", ".")
+                Values.Ammonium = (Values.Ammonium).replace(",", ".")
+                Values.Conductivity = (Values.Conductivity).replace(",", ".")
+
+
+
+                Indexes = {
+                    Temperature: null,
+                    Oxygen: null,
+                    NeededOxygen: null,
+                    Ph: null,
+                    Nitrate: null,
+                    Phosphate: null,
+                    Ammonium: null,
+                    Conductivity: null
+                }
+                Indexes.Temperature = getIndexOfTemperature(Values.Temperature);
+                Indexes.Oxygen = getIndexOfOxygen(Values.Oxygen);
+                Indexes.NeededOxygen = getIndexOfNeededOxygen(Values.NeededOxygen);
+                Indexes.Ph = getIndexOfPh(Values.Ph);
+                Indexes.Nitrate = getIndexOfNitrate(Values.Nitrate);
+                Indexes.Phosphate = getIndexOfPhosphate(Values.Phosphate);
+                Indexes.Ammonium = getIndexOfAmmonium(Values.Ammonium);
+                Indexes.Conductivity = getIndexOfConductivity(Values.Conductivity);
+                result = Math.pow(Indexes.Temperature, 0.08) * Math.pow(Indexes.Oxygen, 0.2) * Math.pow(Indexes
+                    .NeededOxygen, 0.2) * Math.pow(Indexes.Ph, 0.1) * Math.pow(Indexes.Nitrate, 0.1) * Math.pow(
+                    Indexes.Phosphate, 0.1) * Math.pow(Indexes.Ammonium, 0.15) * Math.pow(Indexes.Conductivity,
+                    0.07)
+                console.log(result);
+                document.getElementById("result-body-div").removeAttribute("hidden");
+                document.getElementsByClassName("endresult-name")[0].textContent = getNameFromPoints(result)
+                document.getElementsByClassName("endresult-points")[0].textContent = Math.round(result)
+
+
+
+
+
+
+            } else {
+                analysis(Validity)
+            }
+
+
+        }
+
+        function setWarning(ValueToCheck){
+            ValueInput = document.getElementById(ValueToCheck+"In")
+            ValueInput.style.borderColor="orange";
+            ValueInput.title = "Da kein Wert gegeben wurde, wir ein Durchschnittswert genommen, um das Ergebnis auszurechnen."
+        }
+
+        function analysis(ValidityIn) {
+            if (!ValidityIn.Temperature) {
+                document.getElementById("TemperaturIn").style.borderColor = "red"
+            }
+            if (!ValidityIn.Oxygen) {
+                document.getElementById("SauerstoffIn").style.borderColor = "red"
+            }
+            if (!ValidityIn.NeededOxygen) {
+                document.getElementById("SauerstoffbedarfIn").style.borderColor = "red"
+            }
+            if (!ValidityIn.Ph) {
+                document.getElementById("PhIn").style.borderColor = "red"
+            }
+            if (!ValidityIn.Nitrate) {
+                document.getElementById("NitratIn").style.borderColor = "red"
+            }
+            if (!ValidityIn.Phosphate) {
+                document.getElementById("PhosphatIn").style.borderColor = "red"
+            }
+            if (!ValidityIn.Ammonium) {
+                document.getElementById("AmmoniumIn").style.borderColor = "red"
+            }
+            if (!ValidityIn.Conductivity) {
+                document.getElementById("LeitfähigkeitIn").style.borderColor = "red"
+            }
+
+        }
+
+        function isValid(valueIn, valueName) {
+            valueIn = valueIn.replace(",", ".")
+            if (isNaN(valueIn) && valueIn != "") {
+                return false
+            }
+            if (valueIn < 0 && valueName != "Temperature") {
+                return false
+            }
+            if(valueIn.match(/[.,]$/)){
+                return false
+            }
+            return true
+        }
+
+        setTimeout(() => {
+            
+            inputFields = document.getElementsByTagName("input");
+            Array.prototype.forEach.call(inputFields,element=>{
+                element.onchange=function (){element.title="";element.style.borderColor="white"}
+            })
+        }, 100);
+        
+        document.addEventListener("keydown",(event)=>{
+            if (event.which == 13 || event.keyCode == 13 || event.key === "Enter"){
+                CalculateScore();
+            }
+        })
+
+    </script>
+    <div class="upper">
+        <p class="ueberschrift">
+            Fließgewässerbewertung
+        </p>
+        <h4 class="unterueberschrift">
+            Eine Hilfe zur Bewertung von Fließgewässern nach Bach.
+        </h4>
+    </div>
+    <table>
+        <tr>
+            <td>
+                <div class="main-body">
+                    <p>Die gemessene Temperatur in &#x2103</p>
+                    <input type="text" id="TemperaturIn" placeholder="Bsp.: 21">&#x2103
+                    <p><br>Der gemessene Sauerstoffgehalt des Wassers</p>
+                    <input type="text" id="SauerstoffIn" placeholder="Bsp.: 65">%
+                    <p><br>Der gemessene Sauerstoffbedarf der Tiere im Wasser nach 5 Tagen (BSB 5)</p>
+                    <input type="text" id="SauerstoffbedarfIn" placeholder="Bsp.: 5">mg/L
+                    <p><br>Der gemessene Ph-Wert des Wassers</p>
+                    <input type="text" id="PhIn" placeholder="Bsp.: 6">pH
+                    <p><br>Der gemessene Nitratwert im Wasser</p>
+                    <input type="text" id="NitratIn" placeholder="Bsp.: 16">mg/L
+                    <p><br>Der gemessene Phosphatwert im Wasser</p>
+                    <input type="text" id="PhosphatIn" placeholder="Bsp.: 0.5">mg/L
+                    <p><br>Der gemessene Ammoniumwert im Wasser</p>
+                    <input type="text" id="AmmoniumIn" placeholder="Bsp.: 0,6">mg/L
+                    <p><br>Die gemessene Leitfähigkeit des Wassers</p>
+                    <input type="text" id="LeitfähigkeitIn" placeholder="Bsp.: 600">µS
+                    <p><br><br></p>
+                    <button onclick="CalculateScore()" class="submit">Bach-Index des Gewässers ausrechnen</button>
+            </td>
+
+            <td>
+                <div hidden id="result-body-div" class="result-body">
+                    <h1 class="result-head">
+                        Die Gewässergüte des Gewässers ist nach Bach-Index
+                        <br><span class="endresult-name"></span>,
+                        <br>was <span class="endresult-points"></span> Punkten von 100 entspricht.
+                    </h1>
+            </td>
+            </div>
+            </div>
+        </tr>
+    </table>
+
+</body>
+
+</html>
