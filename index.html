@@ -1,14 +1,3 @@
-<!--
-    -Ermittlung des Gütepotentialwertes
-    -Potenzierung vom Gpw. mit dem Wichtungsfaktor
-    -Multiplikation aller Einzelprodukte
-
-    90-100: excellent
-    70-90: gut
-    50-70: mittel
-    25-50: schlecht
-    0-25: sehr schlecht
--->
 <html>
 
 <head>
@@ -381,19 +370,19 @@
 
         function getNameFromPoints(resultIn) {
             if (resultIn <= 100 && resultIn >= 83) {
-                return "unbelastet,bzw. wenig verschmutzt"
+                return "unbelastet,bzw. wenig verschmutzt <br>(Güteklasse |)"
             } else if (resultIn <= 83 && resultIn >= 73) {
-                return "gering belastet"
+                return "gering belastet <br>(Güteklasse | bis ||)"
             } else if (resultIn <= 73 && resultIn >= 56) {
-                return "mäßig belastet"
+                return "mäßig belastet <br>(Güteklasse ||)"
             } else if (resultIn <= 56 && resultIn >= 44) {
-                return "kritisch belastet"
+                return "kritisch belastet <br>(Güteklasse || bis |||)"
             } else if (resultIn <= 44 && resultIn >= 27) {
-                return "stark verschmutzt"
+                return "stark verschmutzt <br>(Güteklasse |||)"
             } else if (resultIn <= 27 && resultIn >= 17) {
-                return "sehr stark verschmutzt"
+                return "sehr stark verschmutzt <br>(Güteklasse ||| bis |V)"
             } else {
-                return "übermäßig verschmutzt"
+                return "übermäßig verschmutzt <br>(Güteklasse |V)"
             }
         }
 
@@ -569,7 +558,7 @@
                     0.07)
                 console.log(result);
                 document.getElementById("result-body-div").removeAttribute("hidden");
-                document.getElementsByClassName("endresult-name")[0].textContent = getNameFromPoints(result)
+                document.getElementsByClassName("endresult-name")[0].innerHTML = getNameFromPoints(result)
                 document.getElementsByClassName("endresult-points")[0].textContent = Math.round(result)
 
 
