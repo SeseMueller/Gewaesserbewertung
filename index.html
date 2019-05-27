@@ -49,7 +49,8 @@
         h1.result-head {
             text-align: center;
         }
-        input{
+
+        input {
             border-width: 2px;
             border-color: white;
         }
@@ -317,6 +318,7 @@
                 return 3
             }
         }
+
         function getIndexOfConductivity(inputInt) {
             if (inputInt <= 300) {
                 inputInt = Math.round(inputInt / 25) * 25
@@ -411,7 +413,7 @@
             TemperatureIn = document.getElementById("TemperaturIn").value
             if (isValid(TemperatureIn, "Temperatur")) {
                 if (TemperatureIn == "") {
-                    Values.Temperature = "21"
+                    Values.Temperature = "-1"
                     setWarning("Temperatur")
                 } else {
                     Values.Temperature = TemperatureIn
@@ -425,7 +427,7 @@
             OxygenIn = document.getElementById("SauerstoffIn").value
             if (isValid(OxygenIn, "Oxygen")) {
                 if (OxygenIn == "") {
-                    Values.Oxygen = "65"
+                    Values.Oxygen = "-1"
                     setWarning("Sauerstoff")
                 } else {
                     Values.Oxygen = OxygenIn;
@@ -440,7 +442,7 @@
             NeededOxygenIn = document.getElementById("SauerstoffbedarfIn").value
             if (isValid(NeededOxygenIn, "NeededOxygen")) {
                 if (NeededOxygenIn == "") {
-                    Values.NeededOxygen = "5"
+                    Values.NeededOxygen = "-1"
                     setWarning("Sauerstoffbedarf")
                 } else {
                     Values.NeededOxygen = NeededOxygenIn
@@ -454,7 +456,7 @@
             PhIn = document.getElementById("PhIn").value
             if (isValid(PhIn, "Ph")) {
                 if (PhIn == "") {
-                    Values.Ph = "6"
+                    Values.Ph = "-1"
                     setWarning("Ph")
                 } else {
                     Values.Ph = PhIn
@@ -468,7 +470,7 @@
             NitrateIn = document.getElementById("NitratIn").value
             if (isValid(NitrateIn, "Nitrate")) {
                 if (NitrateIn == "") {
-                    Values.Nitrate = "16"
+                    Values.Nitrate = "-1"
                     setWarning("Nitrat")
                 } else {
                     Values.Nitrate = NitrateIn
@@ -482,7 +484,7 @@
             PhosphateIn = document.getElementById("PhosphatIn").value
             if (isValid(PhosphateIn, "Phosphate")) {
                 if (PhosphateIn == "") {
-                    Values.Phosphate = "0.5"
+                    Values.Phosphate = "-1"
                     setWarning("Phosphat")
                 } else {
                     Values.Phosphate = PhosphateIn
@@ -496,7 +498,7 @@
             AmmoniumIn = document.getElementById("AmmoniumIn").value
             if (isValid(AmmoniumIn, "Ammonium")) {
                 if (AmmoniumIn == "") {
-                    Values.Ammonium = "0.6"
+                    Values.Ammonium = "-1"
                     setWarning("Ammonium")
                 } else {
                     Values.Ammonium = AmmoniumIn
@@ -510,7 +512,7 @@
             ConductivityIn = document.getElementById("LeitfähigkeitIn").value
             if (isValid(ConductivityIn, "Conductivity")) {
                 if (ConductivityIn == "") {
-                    Values.Conductivity = "600"
+                    Values.Conductivity = "-1"
                     setWarning("Leitfähigkeit")
                 } else {
                     Values.Conductivity = ConductivityIn
@@ -544,19 +546,85 @@
                     Ammonium: null,
                     Conductivity: null
                 }
-                Indexes.Temperature = getIndexOfTemperature(Values.Temperature);
-                Indexes.Oxygen = getIndexOfOxygen(Values.Oxygen);
-                Indexes.NeededOxygen = getIndexOfNeededOxygen(Values.NeededOxygen);
-                Indexes.Ph = getIndexOfPh(Values.Ph);
-                Indexes.Nitrate = getIndexOfNitrate(Values.Nitrate);
-                Indexes.Phosphate = getIndexOfPhosphate(Values.Phosphate);
-                Indexes.Ammonium = getIndexOfAmmonium(Values.Ammonium);
-                Indexes.Conductivity = getIndexOfConductivity(Values.Conductivity);
-                result = Math.pow(Indexes.Temperature, 0.08) * Math.pow(Indexes.Oxygen, 0.2) * Math.pow(Indexes
-                    .NeededOxygen, 0.2) * Math.pow(Indexes.Ph, 0.1) * Math.pow(Indexes.Nitrate, 0.1) * Math.pow(
-                    Indexes.Phosphate, 0.1) * Math.pow(Indexes.Ammonium, 0.15) * Math.pow(Indexes.Conductivity,
-                    0.07)
+
+                if (Values.Temperature == -1) {
+                    Indexes.Temperature = -1
+                } else {
+                    Indexes.Temperature = getIndexOfTemperature(Values.Temperature);
+                }
+                if (Values.Oxygen == -1) {
+                    Indexes.Oxygen = -1
+                } else {
+                    Indexes.Oxygen = getIndexOfOxygen(Values.Oxygen);
+                }
+                if (Values.NeededOxygen == -1) {
+                    Indexes.NeededOxygen = -1
+                } else {
+                    Indexes.NeededOxygen = getIndexOfNeededOxygen(Values.NeededOxygen);
+                }
+                if (Values.Ph == -1) {
+                    Indexes.Ph = -1
+                } else {
+                    Indexes.Ph = getIndexOfPh(Values.Ph);
+                }
+                if (Values.Nitrate == -1) {
+                    Indexes.Nitrate = -1
+                } else {
+                    Indexes.Nitrate = getIndexOfNitrate(Values.Nitrate);
+                }
+                if (Values.Phosphate == -1) {
+                    Indexes.Phosphate = -1
+                } else {
+                    Indexes.Phosphate = getIndexOfPhosphate(Values.Phosphate);
+                }
+                if (Values.Ammonium == -1) {
+                    Indexes.Ammonium = -1
+                } else {
+                    Indexes.Ammonium = getIndexOfAmmonium(Values.Ammonium);
+                }
+                if (Values.Conductivity == -1) {
+                    Indexes.Conductivity = -1
+                } else {
+                    Indexes.Conductivity = getIndexOfConductivity(Values.Conductivity);
+                }
+
+                Multipliers = {
+                    Temperature: 0.08,
+                    Oxygen: 0.2,
+                    NeededOxygen: 0.2,
+                    Ph: 0.1,
+                    Nitrate: 0.1,
+                    Phosphate: 0.1,
+                    Ammonium: 0.15,
+                    Conductivity: 0.07
+                }
+
+                Multipliers.Temperature = (Indexes.Temperature == -1 ? 0 : 0.08);
+                Multipliers.Oxygen = (Indexes.Oxygen == -1 ? 0 : 0.2);
+                Multipliers.NeededOxygen = (Indexes.NeededOxygen == -1 ? 0 : 0.2);
+                Multipliers.Ph = (Indexes.Ph == -1 ? 0 : 0.1);
+                Multipliers.Nitrate = (Indexes.Nitrate == -1 ? 0 : 0.1);
+                Multipliers.Phosphate = (Indexes.Phosphate == -1 ? 0 : 0.1);
+                Multipliers.Ammonium = (Indexes.Ammonium == -1 ? 0 : 0.15);
+                Multipliers.Conductivity = (Indexes.Conductivity == -1 ? 0 : 0.07);
+
+                SumOfMultipliers = Multipliers.Temperature + Multipliers.Oxygen + Multipliers.NeededOxygen + Multipliers
+                    .Ph + Multipliers.Nitrate + Multipliers.Phosphate + Multipliers.Ammonium + Multipliers.Conductivity
+
+                GlobalMultiplier = 1 / (SumOfMultipliers)
+                if (GlobalMultiplier == Infinity) {
+                    alert("Bitte gib etwas ein!")
+                    return;
+                }
+                result = Math.pow(Math.abs(Indexes.Temperature), 0.08 * GlobalMultiplier) * Math.pow(Math.abs(Indexes.Oxygen),
+                        0.2 * GlobalMultiplier) * Math.pow(Math.abs(Indexes.NeededOxygen), 0.2 * GlobalMultiplier) *
+                    Math.pow(Math.abs(Indexes.Ph), 0.1 * GlobalMultiplier) * Math.pow(Math.abs(Indexes.Nitrate), 0.1 *
+                        GlobalMultiplier) * Math.pow(Math.abs(Indexes.Phosphate), 0.1 * GlobalMultiplier) * Math.pow(
+                        Math.abs(Indexes.Ammonium), 0.15 * GlobalMultiplier) * Math.pow(Math.abs(Indexes.Conductivity),
+                        0.07 * GlobalMultiplier);
                 console.log(result);
+
+
                 document.getElementById("result-body-div").removeAttribute("hidden");
                 document.getElementsByClassName("endresult-name")[0].innerHTML = getNameFromPoints(result)
                 document.getElementsByClassName("endresult-points")[0].textContent = Math.round(result)
@@ -573,10 +641,11 @@
 
         }
 
-        function setWarning(ValueToCheck){
-            ValueInput = document.getElementById(ValueToCheck+"In")
-            ValueInput.style.borderColor="orange";
-            ValueInput.title = "Da kein Wert gegeben wurde, wir ein Durchschnittswert genommen, um das Ergebnis auszurechnen."
+        function setWarning(ValueToCheck) {
+            ValueInput = document.getElementById(ValueToCheck + "In")
+            ValueInput.style.borderColor = "orange";
+            ValueInput.title =
+                "Da kein Wert gegeben wurde, werden die anderen Werte alleine zur Berechnung des Indexes benutzt."
         }
 
         function analysis(ValidityIn) {
@@ -612,29 +681,31 @@
             if (isNaN(valueIn) && valueIn != "") {
                 return false
             }
-            if (valueIn < 0 && valueName != "Temperature") {
+            if (valueIn < 0 && valueName != "Temperature" && valueIn != -1) {
                 return false
             }
-            if(valueIn.match(/[.,]$/)){
+            if (valueIn.match(/[.,]$/)) {
                 return false
             }
             return true
         }
 
         setTimeout(() => {
-            
+
             inputFields = document.getElementsByTagName("input");
-            Array.prototype.forEach.call(inputFields,element=>{
-                element.onchange=function (){element.title="";element.style.borderColor="white"}
+            Array.prototype.forEach.call(inputFields, element => {
+                element.onchange = function () {
+                    element.title = "";
+                    element.style.borderColor = "white"
+                }
             })
         }, 100);
-        
-        document.addEventListener("keydown",(event)=>{
-            if (event.which == 13 || event.keyCode == 13 || event.key === "Enter"){
+
+        document.addEventListener("keydown", (event) => {
+            if (event.which == 13 || event.keyCode == 13 || event.key === "Enter") {
                 CalculateScore();
             }
         })
-
     </script>
     <div class="upper">
         <p class="ueberschrift">
